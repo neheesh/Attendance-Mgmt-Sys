@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-import qtawesome as qta
+#import qtawesome as qta
 import sys
 import os
 

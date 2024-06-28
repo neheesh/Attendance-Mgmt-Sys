@@ -70,12 +70,12 @@ class Window(QDialog):
     def getInfo(self):
 
         cam = cv2.VideoCapture(0)
-        cv2.namedWindow("Registering Image")
-        cam.set(cv2.CAP_PROP_FPS, 30.0)
-        cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
-        cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M','J','P','G'))
-        cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        #cv2.namedWindow("Registering Image")
+        #cam.set(cv2.CAP_PROP_FPS, 30.0)
+        #cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
+        #cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M','J','P','G'))
+        #cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        #cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
         while True:
             ret, frame = cam.read()

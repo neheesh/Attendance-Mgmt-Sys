@@ -21,10 +21,10 @@ def MainFunc():
     for cl in mylist:
         curImg = cv2.imread(f'{path}/{cl}') #read the image file
         images.append(curImg)
-        Fname_ext = os.path.splitext(cl)[0] #extract the class name (student's name) from the file name without the extension
-        Fname = re.split('_', Fname_ext)
-        className.append(Fname[0]) #append the Name
-        usnNum.append(Fname[1]) #append the USN
+        fnameExt = os.path.splitext(cl)[0] #extract the class name (student's name) from the file name without the extension
+        fname = re.split('_', fnameExt)
+        className.append(fname[0]) #append the Name
+        usnNum.append(fname[1]) #append the USN
 
         #className.append(os.path.splitext(cl)[0]) #extract the class name (student's name) from the file name without the extension
 
@@ -59,6 +59,9 @@ def MainFunc():
 
     while True:
         success, img = cap.read() #capture a frame from the webcam
+        if not success:
+            print('Failed to grab frame')
+            break
         imgS = cv2.resize(img, (0,0), None, 0.25, 0.25) #resize the captured frame to 1/4 of its original size for faster processing
         imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB) #covert the resized frame from bgr to rgb format
         faces_in_frame = face_recognition.face_locations(imgS) #detect faces in the resized frame
@@ -78,20 +81,17 @@ def MainFunc():
                 cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (255, 0, 0), cv2.FILLED) #draw a filled rectangle for displaying the name
                 cv2.putText(img, name, (x1 + 6, y2 - 5), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2) #display the name on the frame
                 markAttendance(name,usn) #call the markAttendacne function to record attendance
+                cv2.rectangle(img, (x1, y2 + 10), (x2, y2), (0, 255, 0), cv2.FILLED) #show a green bar letting the user know
 
         cv2.imshow('webcam', img) #display the frame with detected faces and names
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            print("Q hit, closing...")
+        k = cv2.waitKey(1)
+        if k%256 == 27: #exit the loop when the 'Esc' key is pressed
+            print("Escape hit, closing...")
             break
 
-        #k = cv2.waitKey(1)
-        #if k%256 == 27: #exit the loop when the 'Esc' key is pressed
-        #    print("Escape hit, closing...")
-        #    break
-
-        cap.release()
-        cv2.destoryAllWindows()
+#        cap.release()
+#        cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     MainFunc()
