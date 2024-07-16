@@ -8,13 +8,15 @@ import sys
 import os
 import cv2
 
+from database import registerStudents
+
 # creating a class
 # that inherits the QDialog class
-class Window(QDialog):
+class RegWindow(QDialog):
 
     # constructor
     def __init__(self):
-        super(Window, self).__init__()
+        super(RegWindow, self).__init__()
 
         # setting window title
         self.setWindowTitle("Attendance Management System")
@@ -27,15 +29,7 @@ class Window(QDialog):
 
         self.formGroupBox.setFont(QFont('Arial', 16))
 
-        # creating spin box to select age
-        #self.ageSpinBar = QSpinBox()
         self.usnLineEdit = QLineEdit()
-
-        # creating combo box to select degree
-        #self.degreeComboBox = QComboBox()
-
-        # adding items to the combo box
-        #self.degreeComboBox.addItems(["BTech", "MTech", "PhD"])
 
         # creating a line edit
         self.nameLineEdit = QLineEdit()
@@ -65,17 +59,12 @@ class Window(QDialog):
         # setting lay out
         self.setLayout(mainLayout)
 
-
     # get info method called when form is accepted
     def getInfo(self):
 
+        print("Press <Space> to save the picture.")
+
         cam = cv2.VideoCapture(0)
-        #cv2.namedWindow("Registering Image")
-        #cam.set(cv2.CAP_PROP_FPS, 30.0)
-        #cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
-        #cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M','J','P','G'))
-        #cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        #cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
         while True:
             ret, frame = cam.read()
@@ -92,11 +81,12 @@ class Window(QDialog):
                 img_dir = "./student_images/"
                 img_name = img_dir + "{}_{}.png".format(self.nameLineEdit.text(), self.usnLineEdit.text())
                 cv2.imwrite(img_name, frame)
-                print('{} written!'.format(img_name))
+                #print('{} written!'.format(img_name))
                 os.system('sleep 1')
                 break
         cam.release()
         cv2.destroyAllWindows()
+        registerStudents(self.nameLineEdit.text(), self.usnLineEdit.text(), img_name)
 
         # closing the window
         self.close()
@@ -111,14 +101,15 @@ class Window(QDialog):
         # for name and adding input text
         layout.addRow(QLabel("Student Name"), self.nameLineEdit)
 
-        # for degree and adding combo box
-        #layout.addRow(QLabel("Degree"), self.degreeComboBox)
-
         # for age and adding spin box
         layout.addRow(QLabel("USN"), self.usnLineEdit)
 
         # setting layout
         self.formGroupBox.setLayout(layout)
+
+    def resetFields(self):
+        self.nameLineEdit.clear()
+        self.usnLineEdit.clear()
 
 # main method
 if __name__ == '__main__':
@@ -127,7 +118,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     # create the instance of our Window
-    window = Window()
+    window = RegWindow()
 
     # showing the window
     window.show()

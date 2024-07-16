@@ -4,29 +4,34 @@ import cv2
 import face_recognition
 import os
 import numpy as np
-from datetime import datetime
 import pickle
 import re
+from datetime import datetime
+import requests as rq
 
-def MainFunc():
+from database import takeAttendance, listPath, check_A, check_R
 
-    path = './student_images' #specify the path to the directory containing student images
+def AttFunc():
+
     images = []
     className = []
     usnNum = []
 
-    mylist = os.listdir(path) #get a list of image files in the specified directory
+    mylist = listPath() #get a list of image files in the specified image path from database
+
+    if not mylist:
+        print("Please register students.")
+        return
 
     #loop through each image file in the directory
     for cl in mylist:
-        curImg = cv2.imread(f'{path}/{cl}') #read the image file
+        curImg = cv2.imread(f'{cl}') #read the image file
         images.append(curImg)
         fnameExt = os.path.splitext(cl)[0] #extract the class name (student's name) from the file name without the extension
-        fname = re.split('_', fnameExt)
+        fnameS = re.split('/', fnameExt)
+        fname = re.split('_', fnameS[2])
         className.append(fname[0]) #append the Name
         usnNum.append(fname[1]) #append the USN
-
-        #className.append(os.path.splitext(cl)[0]) #extract the class name (student's name) from the file name without the extension
 
     #define a function to find face encodings from a list of images
     def findEncodings(images):
@@ -39,21 +44,14 @@ def MainFunc():
 
     encoded_face_train = findEncodings(images) #get the face encodings for the known student images
 
-    #define a function to mark attendance
+    #define a function to mark attendance in the database
     def markAttendance(name,usn):
-        with open('Attendance.csv', 'r+') as f: #open the attendance csv file in the read and write mode
-            myDataList = f.readlines()
-            nameList = []
-
-            for line in myDataList: #extract existing names from the csv file
-                entry = line.split(',')
-                nameList.append(entry[0])
-
-            if name not in nameList: #if the name is not in the csv file, add a new entry with the current time and date
-                now = datetime.now()
-                time = now.strftime('%I:%M:%S %p')
-                date = now.strftime('%d-%B-%Y')
-                f.writelines(f'\n{name}, {usn}, {time}, {date}')
+        name_a = check_A() #get a list of students names who's attendance is already marked
+        if name not in name_a: #if the name is not in the database, insert a new entry with the current time and date
+            now = datetime.now()
+            time = now.strftime('%I:%M:%S %p')
+            date = now.strftime('%d-%B-%Y')
+            takeAttendance(date,time,name,usn)
 
     cap = cv2.VideoCapture(0) #open the webcam (camera)
 
@@ -73,25 +71,43 @@ def MainFunc():
             matchIndex = np.argmin(faceDist)
 
             if matches[matchIndex]: #if a match is found, mark attendance and display the name
-                name = className[matchIndex].upper().lower()
-                usn = usnNum[matchIndex].upper().lower()
+                name = className[matchIndex]
+                usn = usnNum[matchIndex]
                 y1, x2, y2, x1 = faceloc
                 y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4 #scale coordinates back to original size
                 cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2) #draw a rectangle around the detected face
                 cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (255, 0, 0), cv2.FILLED) #draw a filled rectangle for displaying the name
                 cv2.putText(img, name, (x1 + 6, y2 - 5), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2) #display the name on the frame
                 markAttendance(name,usn) #call the markAttendacne function to record attendance
-                cv2.rectangle(img, (x1, y2 + 10), (x2, y2), (0, 255, 0), cv2.FILLED) #show a green bar letting the user know
+                try:
+                    rq.post('http://localhost:5000/tasks', json = {'task': name})
+                except rq.ConnectionError:
+                    print("Connection Error. Start the web server.")
+                    cap.release()
+                    cv2.destroyAllWindows()
+                    return
+
+            else:
+                y1, x2, y2, x1 = faceloc
+                y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4 #scale coordinates back to original size
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 2) #draw a rectangle around the detected face
+                cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 0, 255), cv2.FILLED) #draw a filled rectangle for displaying the name
+                cv2.putText(img, "Not Registered", (x1 + 6, y2 - 5), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2) #display the name on the frame
+                try:
+                    rq.post('http://localhost:5000/tasks', json = {'task': "Not Registered"})
+                except rq.ConnectionError:
+                    print("Connection Error. Start the web server.")
+                    cap.release()
+                    cv2.destroyAllWindows()
+                    return
 
         cv2.imshow('webcam', img) #display the frame with detected faces and names
 
         k = cv2.waitKey(1)
         if k%256 == 27: #exit the loop when the 'Esc' key is pressed
-            print("Escape hit, closing...")
+            #response.close()
+            print("Escape hit, closing...\nPress <Super-q> to exit the camera widnow.")
             break
 
-#        cap.release()
-#        cv2.destroyAllWindows()
-
 if __name__ == '__main__':
-    MainFunc()
+    AttFunc()
