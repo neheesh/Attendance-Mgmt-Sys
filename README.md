@@ -1,6 +1,6 @@
 # Attendance Management System Using Facial Recognition
 
-This mini-project helps with attendance management using facial recognition by using Raspberry Pi Pico WH for indicating the user with LEDs and Buzzer. More about the microcontroller [README.md](./pyboard/README.md) and the code is in [/pyboard][./pyboard/*].
+This mini-project helps with attendance management using facial recognition by using Raspberry Pi Pico WH for indicating the user with LEDs and Buzzer. More about the microcontroller [README.md](./pyboard/README.md) and the code is in [/pyboard](./pyboard/).
 
 The code has a GUI programmed using `PyQt5`. Attach a screenshot.
 
