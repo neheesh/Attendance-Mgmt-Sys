@@ -1,127 +1,99 @@
 #!/usr/bin/env python
 
-# importing libraries
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-import sys
-import os
-import cv2
+from PyQt5.QtWidgets import QDialog, QGroupBox, QLineEdit, QDialogButtonBox, QVBoxLayout, QFormLayout, QLabel, QApplication # Importing specific widgets from PyQt5.QtWidgets for creating the user interface
+from PyQt5.QtGui import QFont # Importing QFont from PyQt5.QtGui for setting font styles
+from PyQt5.QtCore import Qt # Importing Qt from PyQt5.QtCore for core functionalities like event handling
+import sys # Importing system-specific parameters and functions
+import os # Importing OS module to interact with the operating system
+import cv2 # Importing OpenCV for image processing
 
+# Importing the registerStudents function from database module
 from database import registerStudents
 
-# creating a class
-# that inherits the QDialog class
+# Creating a class that inherits the QDialog class
 class RegWindow(QDialog):
 
-    # constructor
+    # Constructor
     def __init__(self):
-        super(RegWindow, self).__init__()
+        super(RegWindow, self).__init__() # Calling the constructor of the parent class
 
-        # setting window title
-        self.setWindowTitle("Attendance Management System")
+        self.setWindowTitle("Attendance Management System") # Setting window title
+        self.setGeometry(100, 100, 300, 400) # Setting geometry to the window
+        self.formGroupBox = QGroupBox("Registration") # Creating a group box for the form
+        self.formGroupBox.setFont(QFont('Arial', 16)) # Setting font for the group box
 
-        # setting geometry to the window
-        self.setGeometry(100, 100, 300, 400)
-
-        # creating a group box
-        self.formGroupBox = QGroupBox("Registration")
-
-        self.formGroupBox.setFont(QFont('Arial', 16))
-
+        # creating input fields for name and USN
         self.usnLineEdit = QLineEdit()
-
-        # creating a line edit
         self.nameLineEdit = QLineEdit()
 
-        # calling the method that create the form
+        # Calling the method that create the form layout
         self.createForm()
 
-        # creating a dialog button for ok and cancel
+        # Creating a dialog button for OK and Cancel
         self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        self.buttonBox.setFont(QFont('Arial', 16))
+        self.buttonBox.setFont(QFont('Arial', 16)) # Setting font for the button box
 
-        # adding action when form is accepted
+        # Connecting OK button to getInfo method
         self.buttonBox.accepted.connect(self.getInfo)
 
-        # adding action when form is rejected
+        # Connecting Cancel button to reject method
         self.buttonBox.rejected.connect(self.reject)
 
-        # creating a vertical layout
+        # Creating a vertical layout for the dialog
         mainLayout = QVBoxLayout()
+        mainLayout.addWidget(self.formGroupBox) # Adding form group box to the layout
+        mainLayout.addWidget(self.buttonBox) # Adding button box to the layout
 
-        # adding form group box to the layout
-        mainLayout.addWidget(self.formGroupBox)
-
-        # adding button box to the layout
-        mainLayout.addWidget(self.buttonBox)
-
-        # setting lay out
+        # Setting the layout for the dialog
         self.setLayout(mainLayout)
 
-    # get info method called when form is accepted
+    # Method called when form is accepted
     def getInfo(self):
 
-        print("Press <Space> to save the picture.")
+        print("Press <Space> to save the picture or <Esc> to quit.")
 
-        cam = cv2.VideoCapture(0)
+        cam = cv2.VideoCapture(0) # Open the default camera
 
         while True:
-            ret, frame = cam.read()
+            ret, frame = cam.read() # Capture frame-by-frame
             if not ret:
                 print('Failed to grab frame')
                 break
-            cv2.imshow("Register Image", frame)
+            cv2.imshow("Register Image", frame) # Display the captured frame
 
             k = cv2.waitKey(1)
-            if k%256 == 27:
+            if k%256 == 27: # ESC pressed
                 print("Escape hit, closing...")
                 break
-            elif k%256 == 32:
+            elif k%256 == 32: # SPACE pressed
                 img_dir = "./student_images/"
                 img_name = img_dir + "{}_{}.png".format(self.nameLineEdit.text(), self.usnLineEdit.text())
-                cv2.imwrite(img_name, frame)
-                #print('{} written!'.format(img_name))
-                os.system('sleep 1')
+                cv2.imwrite(img_name, frame) # Save the captured image
+                print('{} written. Registering...'.format(img_name))
+                os.system('sleep 1') # Sleep for 1 second
                 break
-        cam.release()
-        cv2.destroyAllWindows()
-        registerStudents(self.nameLineEdit.text(), self.usnLineEdit.text(), img_name)
 
-        # closing the window
-        self.close()
+        cam.release() # Release the camera
+        cv2.destroyAllWindows() # Close all OpenCV windows
 
-    # create form method
+        registerStudents(self.nameLineEdit.text(), self.usnLineEdit.text(), img_name) # Register the student with the captured image
+
+        self.close() # Close the dialog window
+
+    # Method to create the form layout
     def createForm(self):
-
-        # creating a form layout
-        layout = QFormLayout()
-
-        # adding rows
-        # for name and adding input text
-        layout.addRow(QLabel("Student Name"), self.nameLineEdit)
-
-        # for age and adding spin box
-        layout.addRow(QLabel("USN"), self.usnLineEdit)
-
-        # setting layout
-        self.formGroupBox.setLayout(layout)
+        layout = QFormLayout() # Creating a form layout
+        layout.addRow(QLabel("Student Name"), self.nameLineEdit) # Adding row for student name
+        layout.addRow(QLabel("USN"), self.usnLineEdit) # Adding row for USN
+        self.formGroupBox.setLayout(layout) # Setting layout for the form group box
 
     def resetFields(self):
-        self.nameLineEdit.clear()
-        self.usnLineEdit.clear()
+        self.nameLineEdit.clear() # Clear the name input field
+        self.usnLineEdit.clear() # Clear the USN input field
 
-# main method
+# Main method
 if __name__ == '__main__':
-
-    # create pyqt5 app
-    app = QApplication(sys.argv)
-
-    # create the instance of our Window
-    window = RegWindow()
-
-    # showing the window
-    window.show()
-
-    # start the app
-    sys.exit(app.exec())
+    app = QApplication(sys.argv) # Create a PyQt5 application
+    window = RegWindow() # Create an instance of the window
+    window.show() # Show the window
+    sys.exit(app.exec()) # Show the window
