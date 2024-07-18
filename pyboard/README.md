@@ -27,20 +27,42 @@ This project utilizes MicroPython on an Raspberry Pi Pico WH microcontroller to 
 
 3. **Configuring WiFi:**
    - Edit `SSID` and `PSK` variables in `main.py` to match your WiFi network credentials.
-
+   	```
+	SSID = "my network"
+	PSK = "my password"
+	```
 4. **Configuring Server URL:**
-   - Replace `[IP_ADDR]` in `main.py` with the actual IP address of your server.
-   - Set `<mongodb dataapi>`, `<data endpoing>` and `<api-key>` variables to appropriate values for MongoDB API integration.
-   - Set the `dataSource`, `database`, `collection` in the `searchPayload`.
-
-5. **Connecting Hardware:**
+	- Replace `[IP_ADDR]:[PORT]` in `main.py` with the actual IP address of your server.\
+		`url = "http://192.168.1.1:5000/tasks"`
+   	- Set `<mongodb dataapi>`, `<data endpoint>` and `<api-key>` variables to appropriate values for MongoDB API integration.
+   		```
+		URL = "[URL]"
+		API_KEY = "[API KEY]"
+		```
+5. **Define the search payload in the `find` function.**
+	- Set the `dataSource`, `database`, `collection` in the `searchPayload`.
+	```
+	searchPayload = {
+		"dataSource": "<cluster name>",
+		"database": "<database name>",
+		"collection": "<collection name>",
+		"filter": filter_dictionary,
+		"projection": projection_dictionary,
+	}
+	```
+6. **Connecting Hardware:**
    - Connect LEDs and buzzer to the GPIO pins as defined in `main.py` (adjust pin numbers if necessary).
 
-6. **Raspberry Pi Pico WH Pinout Diagram:**\
+7. **Raspberry Pi Pico WH Pinout Diagram:**\
 ![picowh-pinout](../doc/picow-pinout.png)
 
+<<<<<<< HEAD
 7. **Circuit Diagram**:
 	- There are total of three LEDs and one buzzer. GP28, GP26, GP21, and GP19 respectively.\
+=======
+8. **Circuit Diagram**:
+	- There are total of four LEDs and one buzzer. GP28, GP26, GP21, and GP19 respectively.\
+>>>>>>> 683aebf (updated file)
 ![circuit-image](../doc/picowh-circuit.png)
 
 ## Usage

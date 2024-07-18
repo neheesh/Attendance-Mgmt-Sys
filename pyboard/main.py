@@ -5,7 +5,7 @@ from utime import sleep, sleep_ms # Importing sleep functions from utime module
 from machine import Pin, PWM # Importing Pin and PWM classes from machine module
 
 SSID = "<ssid>" # WiFi SSID
-PSK = "<wifi_password>" # WiFi password
+PSK = "<password>" # WiFi password
 
 ledZ = Pin("LED", Pin.OUT) # Define Pin for on-board LED
 ledR = Pin(26, Pin.OUT) # Define Pin for Red LED
@@ -44,22 +44,34 @@ def connect_to_wifi(ssid, psk):
     wlan = network.WLAN(network.STA_IF) # Initialize WiFi interface in station mode
     wlan.active(True) # Activate WiFi interface
     #Connect to Wifi, keep trying until failure or success
-    wlan.connect(ssid, psk) # Attempt to connect to WiFi
+    #wlan.connect(ssid, psk) # Attempt to connect to WiFi
+    max_attempts = 20
+    attempt = 0
     while not wlan.isconnected() and wlan.status() >= 0: # Keep trying to connect until successful or failed
+        wlan.connect(ssid, psk) # Attempt to connect to WiFi
         print("Waiting to Connect")
-        sleep(5) # Wait for 5 seconds before retrying
+        ledZ.value(1)
+        sleep(15) # Wait for 10 seconds before retrying
+        ledZ.value(0)
+        attempt += 1
     if not wlan.isconnected(): # If not connected after retries
         raise Exception("Wifi not available") # Raise exception indicating WiFi connection failure
+        ledB.value(1)
+        sleep(0.5)
+        lebB.value(0)
     print("Connected to WiFi") # Raise exception indicating WiFi connection failure
+    ledG.value(1)
+    sleep(0.5)
+    ledG.value(0)
 
 # Function to query a database using a custom API
 def find(filter_dictionary,projection_dictionary):
     try:
         headers = { "api-key": API_KEY } # Define headers for API request with API key
         searchPayload = { # Define payload for API request
-            "dataSource": "<database name>",
-            "database": "<database>",
-            "collection": "<collection>",
+            "dataSource": "<cluster name>",
+            "database": "<database name>",
+            "collection": "<collection name>",
             "filter": filter_dictionary,
             "projection": projection_dictionary,
         }
@@ -80,32 +92,31 @@ def find(filter_dictionary,projection_dictionary):
 try:
     connect_to_wifi(SSID, PSK) # Attempt to connect to WiFi using defined SSID and password
 
-    url = "http://[IP_ADDR]/tasks" # Define URL for HTTP request
+    url = "http://[IPADDR]:[PORT]/tasks" # Define URL for HTTP request
     URL = "<data endpoint>" # Define MongoDB API URL
     API_KEY = "<api-key>" # Define API key for authentication
 
-    while True: # Define API key for authentication
+    while True: # Main loop
         try:
             aName = requests.get(url) # Send GET request to retrieve task name from server
             if aName is not None and aName.content: # If response is valid and contains content
                 name = aName.json()['task'] # Extract task name from JSON response
                 names = find({"name": name}, {"_id": 0, "name": 1}) # Query database for matching names
-
                 if name == "Not Registered": # If task name indicates not registered
                     ledR.value(1) # Turn on Red LED
                     play_song(reject) # Play rejection sound sequence
                     ledR.value(0) # Turn off Red LED after playing
-                    sleep(1) # Pause for 1 second
+                    #sleep(1) # Pause for 1 second
                 elif name == "NONE": # If task name indicates no task
                     ledZ.value(1) # Turn on LED for idle state
                     play_song(idle) # Play idle sound sequence
                     ledZ.value(0) # Turn off LED after playing
-                    sleep(1) # Pause for 1 second
+                    #sleep(1) # Pause for 1 second
                 elif names[0] == name: # If task name matches found name in database
                     ledG.value(1) # Turn on Green LED
                     play_song(accept) # Play acceptance sound sequence
                     ledG.value(0) # Turn off Green LED after playing
-                    sleep(1) # Pause for 1 second
+                    #sleep(1) # Pause for 1 second
                 else: # If task name does not match any name in database
                     print("Name not found in the database.")
             else: # If server response is invalid or empty
@@ -115,8 +126,8 @@ try:
             ledB.value(1) # Turn on Blue LED to indicate error
             play_song(error) # Play error sound sequence
             ledB.value(0) # Turn off Blue LED after playing
-            sleep(1) # Pause for 1 second
-        sleep(2) # Pause for 2 seconds before repeating loop
+            #sleep(1) # Pause for 1 second
+        sleep(1) # Pause for 2 seconds before repeating loop
 
 except Exception as e: # Catch any exceptions that occur during program execution
     print(f"An error occurred: {e}")
