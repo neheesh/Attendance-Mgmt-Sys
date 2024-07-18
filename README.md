@@ -48,7 +48,7 @@ DB_NAME = 'database'
 COLL_NAME_A = 'collection attendance'
 COLL_NAME_R = 'collection registration'
 ```
-8. **Optional**
+8. Optional
 	- Specific port number can be assigned in `webserver.py` if needed. (Web server starts on 0.0.0.0 and port 5000 by default). If changed, the POST requests in `attendance.py` and GET requests in the micropython code [main.py](./pyboard/main.py) that runs on 'raspberry pi pico wh' needs to changed accordingly.
 9. Run `main.py`.\
 `python main.py`
