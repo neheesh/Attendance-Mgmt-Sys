@@ -56,13 +56,8 @@ This project utilizes MicroPython on an Raspberry Pi Pico WH microcontroller to 
 7. **Raspberry Pi Pico WH Pinout Diagram:**\
 ![picowh-pinout](../doc/picow-pinout.png)
 
-<<<<<<< HEAD
-7. **Circuit Diagram**:
-	- There are total of three LEDs and one buzzer. GP28, GP26, GP21, and GP19 respectively.\
-=======
 8. **Circuit Diagram**:
 	- There are total of four LEDs and one buzzer. GP28, GP26, GP21, and GP19 respectively.\
->>>>>>> 683aebf (updated file)
 ![circuit-image](../doc/picowh-circuit.png)
 
 ## Usage
