@@ -53,11 +53,11 @@ This project utilizes MicroPython on an Raspberry Pi Pico WH microcontroller to 
 6. **Connecting Hardware:**
    - Connect LEDs and buzzer to the GPIO pins as defined in `main.py` (adjust pin numbers if necessary).
 
-7. **Raspberry Pi Pico WH Pinout Diagram:**\
+7. **Raspberry Pi Pico WH Pinout Diagram:** \
 ![picowh-pinout](../doc/picow-pinout.png)
 
 8. **Circuit Diagram**:
-![circuit-image](../doc/picowh-circuit.png)
+![circuit-image](../doc/picowh-circuit.png) \
 This circuit involves a Raspberry Pi Pico WH, a half-sized breadboard, three LEDs, a buzzer, and three 330-ohm resistors. Here’s how the components are connected.
 	1. **Components**
 		- Raspberry Pi Pico WH

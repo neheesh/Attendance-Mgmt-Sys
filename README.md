@@ -8,7 +8,7 @@ The code has a GUI programmed using `PyQt5`.
 1. **Register Students**
 	- Runs `regui.py` which opens a window with input fields for `Student Name` and `USN` with two button `Ok` and `Cancel` on clicking opens up the webcam to save the `Student Name`, `USN` and `Image Path` in the database and image itself is saved locally on the machine in a directory called `student_images`.
 2. **Take Attendance**
-	- Runs `attendance.py` which requires at-least one student registered and the web-server running. If these conditions are satisfied, it opens up the webcam to detect the face, if the face is matched with registered face, marks the attendance and posts the name on detected face to the web-server.
+	- Runs `attendance.py` which requires at-least one student registered and the web-server running. If these conditions are satisfied, it opens up the webcam to detect the face, if the face is matched with registered face, marks the attendance and posts the name of detected face to the web-server.
 3. **Reset Database**
 	- Runs a function in `database.py` to drop all documents in the collections.
 4. **Start Web Server**
