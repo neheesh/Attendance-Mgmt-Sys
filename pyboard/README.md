@@ -57,8 +57,29 @@ This project utilizes MicroPython on an Raspberry Pi Pico WH microcontroller to 
 ![picowh-pinout](../doc/picow-pinout.png)
 
 8. **Circuit Diagram**:
-	- There are total of four LEDs and one buzzer. GP28, GP26, GP21, and GP19 respectively.\
 ![circuit-image](../doc/picowh-circuit.png)
+This circuit involves a Raspberry Pi Pico WH, a half-sized breadboard, three LEDs, a buzzer, and three 330-ohm resistors. Here’s how the components are connected.
+	1. **Components**
+		- Raspberry Pi Pico WH
+		- Breadboard
+		- Three LEDs (Red, Blue, Green)
+		- Buzzer
+		- Three 330-ohm Resistors
+		- Jumper Wires
+	2. **Connections**
+		- **Raspberry Pi Pico WH** - Placed on the half-sized breadboard with pins straddling the central gap.
+		- **LED Connections** \
+		Red LED - Anode (long leg) connected to GP26 (Pin 31) on the Pico. Cathode (short leg) connected to a 330-ohm resistor, which is connected to the ground rail. \
+		Blue LED - Anode connected to GP21 (Pin 27) on the Pico. Cathode connected to a 330-ohm resistor, which is connected to the ground rail. \
+		Green LED - Anode connected to GP28 (Pin 34) on the Pico. Cathode connected to a 330-ohm resistor, which is connected to the ground rail.
+		- **Buzzer Connection** \
+		Positive terminal connected to GP19 (Pin 25) on the Pico. Negative terminal connected to the ground rail.
+		- **Resistor Placement** \
+		330-ohm Resistor 1 - Connected between the cathode of the Red LED and the ground rail. \
+		330-ohm Resistor 2 - Connected between the cathode of the Blue LED and the ground rail. \
+	        330-ohm Resistor 3 - Connected between the cathode of the Green LED and the ground rail.
+		- **Ground and Power Connections** \
+		All ground connections from the LEDs, buzzer, and resistors are connected to the ground rail on the breadboard. Ensure the Pico's ground pin (GND) is also connected to the ground rail.
 
 ## Usage
 
