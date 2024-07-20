@@ -56,7 +56,7 @@ This project utilizes MicroPython on an Raspberry Pi Pico WH microcontroller to 
 7. **Raspberry Pi Pico WH Pinout Diagram:** \
 ![picowh-pinout](../doc/picow-pinout.png)
 
-8. **Circuit Diagram**:
+8. **Circuit Diagram**: \
 ![circuit-image](../doc/picowh-circuit.png) \
 This circuit involves a Raspberry Pi Pico WH, a half-sized breadboard, three LEDs, a buzzer, and three 330-ohm resistors. Here’s how the components are connected.
 	1. **Components**
