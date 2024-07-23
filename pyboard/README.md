@@ -45,7 +45,7 @@ This project utilizes MicroPython on an Raspberry Pi Pico WH microcontroller to 
 	searchPayload = {
 		"dataSource": "<cluster name>",
 		"database": "<database name>",
-		"collection": "<collection name>",
+		"collection": "<attendance collection name>",
 		"filter": filter_dictionary,
 		"projection": projection_dictionary,
 	}
