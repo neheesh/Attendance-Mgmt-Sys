@@ -51,14 +51,14 @@ def connect_to_wifi(ssid, psk):
         wlan.connect(ssid, psk) # Attempt to connect to WiFi
         print("Waiting to Connect")
         ledZ.value(1)
-        sleep(15) # Wait for 10 seconds before retrying
+        sleep(10) # Wait for 10 seconds before retrying
         ledZ.value(0)
         attempt += 1
     if not wlan.isconnected(): # If not connected after retries
-        raise Exception("Wifi not available") # Raise exception indicating WiFi connection failure
         ledB.value(1)
         sleep(0.5)
-        lebB.value(0)
+        ledB.value(0)
+        machine.reset()
     print("Connected to WiFi") # Raise exception indicating WiFi connection failure
     ledG.value(1)
     sleep(0.5)
@@ -71,11 +71,11 @@ def find(filter_dictionary,projection_dictionary):
         searchPayload = { # Define payload for API request
             "dataSource": "<cluster name>",
             "database": "<database name>",
-            "collection": "<collection name>",
+            "collection": "<attendance collection name>",
             "filter": filter_dictionary,
             "projection": projection_dictionary,
         }
-        response = requests.post(URL + "find", headers=headers, json=searchPayload) # Send POST request to API endpoint
+        response = requests.post(URL + "action/find", headers=headers, json=searchPayload) # Send POST request to API endpoint
         #print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
         if response.status_code >= 200 and response.status_code < 300: # If request is successful
             data = response.json() # Parse JSON response
@@ -92,7 +92,7 @@ def find(filter_dictionary,projection_dictionary):
 try:
     connect_to_wifi(SSID, PSK) # Attempt to connect to WiFi using defined SSID and password
 
-    url = "http://[IPADDR]:[PORT]/tasks" # Define URL for HTTP request
+    url = "http://[IP_ADDR]:5000/tasks" # Define URL for HTTP request
     URL = "<data endpoint>" # Define MongoDB API URL
     API_KEY = "<api-key>" # Define API key for authentication
 
