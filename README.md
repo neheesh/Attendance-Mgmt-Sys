@@ -39,6 +39,7 @@ The code has a GUI programmed using `PyQt5`.
 	- name the `database`.
 	- create the `collections` for storing `attendance` and `registration`.
 	- enable the `Data API` and get the `URL Endpoint` and `API Key`. (Used in micro-python for initializing the mongodb for raspberry pi pico)
+	- add your `public IP address` in the network access or click on `Add Current IP Address` button in the network access tab.
 	- refer the documentation for more details [here](https://www.mongodb.com/docs/atlas/tutorial/deploy-free-tier-cluster/) and [here](https://www.mongodb.com/resources/products/fundamentals/create-database).
 7. In `database.py` define the `ATLAS_URI`, `DB_NAME`, `COLL_NAME_A`, and `COLL_NAME_R`. Refer the documentation [here](https://www.mongodb.com/docs/manual/reference/connection-string/) and [here](https://www.mongodb.com/docs/atlas/driver-connection/) for more details. Assigned `COLL_NAME_A` and `COLL_NAME_R` creates the new collection if that particular collection is not created in Step 6 or if there is any typo during defining the variables.
 
