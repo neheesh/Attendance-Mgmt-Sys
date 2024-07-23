@@ -40,7 +40,7 @@ The code has a GUI programmed using `PyQt5`.
 	- create the `collections` for storing `attendance` and `registration`.
 	- enable the `Data API` and get the `URL Endpoint` and `API Key`. (Used in micro-python for initializing the mongodb for raspberry pi pico)
 	- refer the documentation for more details [here](https://www.mongodb.com/docs/atlas/tutorial/deploy-free-tier-cluster/) and [here](https://www.mongodb.com/resources/products/fundamentals/create-database).
-7. In `database.py` define the `ATLAS_URI`, `DB_NAME`, `COLL_NAME_A`, and `COLL_NAME_R`. Refer the documentation [here](https://www.mongodb.com/docs/manual/reference/connection-string/) and [here](https://www.mongodb.com/docs/atlas/driver-connection/) for more details.
+7. In `database.py` define the `ATLAS_URI`, `DB_NAME`, `COLL_NAME_A`, and `COLL_NAME_R`. Refer the documentation [here](https://www.mongodb.com/docs/manual/reference/connection-string/) and [here](https://www.mongodb.com/docs/atlas/driver-connection/) for more details. Assigned `COLL_NAME_A` and `COLL_NAME_R` creates the new collection if that particular collection is not created in Step 6 or if there is any typo during defining the variables.
 
 ```
 ATLAS_URI = 'mongodb+srv://<username>:<password>@<clusterName>.mongodb.net/?retryWrites=true&w=majority'
@@ -48,6 +48,7 @@ DB_NAME = 'database'
 COLL_NAME_A = 'collection attendance'
 COLL_NAME_R = 'collection registration'
 ```
+
 8. Optional
 	- Specific port number can be assigned in `webserver.py` if needed. (Web server starts on 0.0.0.0 and port 5000 by default). If changed, the POST requests in `attendance.py` and GET requests in the micropython code [main.py](./pyboard/main.py) that runs on 'raspberry pi pico wh' needs to changed accordingly.
 9. Run `main.py`.\
