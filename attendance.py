@@ -74,8 +74,8 @@ def AttFunc():
                 usn = usnNum[matchIndex] # Get USN of matched face
                 y1, x2, y2, x1 = faceloc # Get face location
                 y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4 # Scale coordinates back to original size
-                cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2) # Draw a rectangle around the detected face
-                cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (255, 0, 0), cv2.FILLED) # Draw a filled rectangle for displaying the name
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2) # Draw a rectangle around the detected face
+                cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED) # Draw a filled rectangle for displaying the name
                 cv2.putText(img, name, (x1 + 6, y2 - 5), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2) # Display the name on the frame
                 try:
                     rq_response = rq.post('http://localhost:5000/tasks', json = {'task': name}) # Send POST request
